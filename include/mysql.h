@@ -86,7 +86,7 @@ public:
         if( obj->fd == nullptr )
           { process::error("Error: Can't Start MySQL"); }
 
-        auto host = url::host( uri );
+        auto host = url::hostname( uri );
         auto user = url::user( uri );
         auto pass = url::pass( uri );
         auto port = url::port( uri );
