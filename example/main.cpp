@@ -1,11 +1,11 @@
 #include <nodepp/nodepp.h>
-#include <sqlite.h>
+#include <mysql.h>
 
 using namespace nodepp;
 
 void onMain() {
 
-    sqlite_t db ("tcp://usr:pass@localhost:8000","dbName");
+    mysql_t db ("mysql://usr:pass@localhost:8000","dbName");
 
     db.exec(R"(
         CREATE TABLE COMPANY(
