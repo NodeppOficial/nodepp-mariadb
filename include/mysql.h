@@ -71,9 +71,8 @@ public:
 
         mysql_ssl_set( obj->fd, ssl->get_key_path(), ssl->get_crt_path(), ssl->get_ca_path(), NULL, NULL );
 
-        if( mysql_real_connect( obj->fd, host, user, pass, name, port, NULL, 0 ) == NULL ){
-            string_t message = mysql_error( obj->fd );
-            process::error( "SQL Error: ", message );
+        if( mysql_real_connect( obj->fd, host.get(), user.get(), pass.get(), name.get(), port, NULL, 0 ) == NULL ){
+            string_t message = mysql_error( obj->fd ); process::error( "SQL Error: ", message );
         }
 
     }
@@ -91,23 +90,22 @@ public:
         auto pass = url::pass( uri );
         auto port = url::port( uri );
 
-        if( mysql_real_connect( obj->fd, host, user, pass, name, port, NULL, 0 ) == NULL ){
-            string_t message = mysql_error( obj->fd );
-            process::error( "SQL Error: ", message );
+        if( mysql_real_connect( obj->fd, host.get(), user.get(), pass.get(), name.get(), port, NULL, 0 ) == NULL ){
+            string_t message = mysql_error( obj->fd ); process::error( "SQL Error: ", message );
         }
 
     }
     
     /*─······································································─*/
 
-    void exec( const string_t& cmd, const function_t<void,object_t>& cb ) { char* msg;
+    void exec( const string_t& cmd, const function_t<void,object_t>& cb ) {
         if( mysql_real_query( obj->fd, cmd.data(), cmd.size() ) != 0 ){
             string_t message = mysql_error( obj->fd );
             process::error( "SQL Error: ", message );
         }   callback( cb );
     }
 
-    void exec( const string_t& cmd ) { char* msg;
+    void exec( const string_t& cmd ) {
         if( mysql_real_query( obj->fd, cmd.data(), cmd.size() ) != 0 ){
             string_t message = mysql_error( obj->fd );
             process::error( "SQL Error: ", message );
