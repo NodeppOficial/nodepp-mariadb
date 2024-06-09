@@ -69,8 +69,7 @@ public:
         auto pass = url::pass( uri );
         auto port = url::port( uri );
 
-        mysql_ssl_set( obj->fd, ssl->get_key_path(), ssl->get_crt_path(), ssl->get_ca_path(), NULL, NULL );
-
+        mysql_ssl_set( obj->fd, ssl->get_key_path().get(), ssl->get_crt_path().get(), ssl->get_ca_path().get(), NULL, NULL );
         if( mysql_real_connect( obj->fd, host.get(), user.get(), pass.get(), name.get(), port, NULL, 0 ) == NULL ){
             string_t message = mysql_error( obj->fd ); process::error( "SQL Error: ", message );
         }
