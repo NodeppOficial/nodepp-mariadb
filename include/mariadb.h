@@ -3,9 +3,10 @@
 
 /*────────────────────────────────────────────────────────────────────────────*/
 
+#include <mariadb/mysql.h>
+#include <nodepp/nodepp.h>
 #include <nodepp/url.h>
 #include <nodepp/ssl.h>
-#include <mariadb/mysql.h>
 
 namespace nodepp { using sql_item_t = map_t<string_t,string_t>; }
 
@@ -71,9 +72,8 @@ public:
 
         char* key = ssl->get_key_path()==nullptr ? nullptr : ssl->get_key_path().get();
         char* crt = ssl->get_crt_path()==nullptr ? nullptr : ssl->get_crt_path().get();
-        char* cha = ssl->get_cha_path()==nullptr ? nullptr : ssl->get_cha_path().get();
 
-            mysql_ssl_set( obj->fd, key, crt, cha, NULL, NULL );
+            mysql_ssl_set( obj->fd, key, crt, NULL , NULL, NULL );
         if( mysql_real_connect( obj->fd, host.get(), user.get(), pass.get(), name.get(), port, NULL, 0 ) == NULL ){
             string_t message = mysql_error( obj->fd ); process::error( message );
         }
