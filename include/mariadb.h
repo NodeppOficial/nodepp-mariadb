@@ -6,7 +6,6 @@
 #include <mariadb/mysql.h>
 #include <nodepp/nodepp.h>
 #include <nodepp/url.h>
-#include <nodepp/ssl.h>
 
 namespace nodepp { using sql_item_t = map_t<string_t,string_t>; }
 
@@ -33,7 +32,7 @@ protected:
         for( int x=0; x<num_fields; x++ )
            { col.push( row[x] ); }
 
-        while( (row=mysql_fetch_row(res)) ) {
+        while( (row=mysql_fetch_row(res)) ){
           for( int x=0; x<num_fields; x++ ){
                arguments[ col[x] ] = row[x] ? row[x] : "NULL"; 
         } cb ( arguments ); }
@@ -59,6 +58,7 @@ public:
     
     /*─······································································─*/
     
+#ifdef NODEPP_SSL
     mariadb_t ( string_t uri, string_t name, ssl_t* ssl ) : obj( new NODE ) {
         
         obj->fd = mysql_init(NULL); if( obj->fd == nullptr )
@@ -77,6 +77,7 @@ public:
         }
 
     }
+#endif
     
     /*─······································································─*/
     
@@ -105,11 +106,12 @@ public:
         }   callback( cb );
     }
 
-    void exec( const string_t& cmd ) const {
+    array_t<sql_item_t> exec( const string_t& cmd ) const { array_t<sql_item_t> res;
+        function_t<void,sql_item_t> cb = [&]( sql_item_t args ){ res.push( args ); };
         if( mysql_real_query( obj->fd, cmd.data(), cmd.size() ) != 0 ){
             string_t message = mysql_error( obj->fd );
             process::error( message );
-        }
+        }   callback( cb ); return res;
     }
 
 };}
