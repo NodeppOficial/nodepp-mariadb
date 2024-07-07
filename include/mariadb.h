@@ -22,7 +22,7 @@ protected:
 
 public:
 
-    template< class T, class U, class V > gnEmit( T& fd, U& res, V& cb ){
+    template< class T, class U, class V, class Q > gnEmit( T& fd, U& res, V& cb, Q& self ){
     gnStart 
 
         if( res == NULL ) { process::error( mysql_error(fd) ); }
@@ -121,9 +121,11 @@ public:
     void exec( const string_t& cmd, const function_t<void,sql_item_t>& cb ) const {
         if( mysql_real_query( obj->fd, cmd.data(), cmd.size() ) != 0 ){
             process::error( mysql_error( obj->fd ) );
-        }   MYSQL_RES *res = mysql_store_result( obj->fd );   
+        }
 
-        _mariadb_::cb task; process::add( task, obj->fd, res, cb );
+        auto self = type::bind( this );
+        MYSQL_RES *res = mysql_store_result( obj->fd );
+        _mariadb_::cb task; process::add( task, obj->fd, res, cb, self );
     }
 
     array_t<sql_item_t> exec( const string_t& cmd ) const { array_t<sql_item_t> arr;
@@ -131,9 +133,11 @@ public:
 
         if( mysql_real_query( obj->fd, cmd.data(), cmd.size() ) != 0 ){
             process::error( mysql_error( obj->fd ) );
-        }   MYSQL_RES *res = mysql_store_result( obj->fd );   
+        }
 
-        _mariadb_::cb task; process::await( task, obj->fd, res, cb ); return arr;
+        auto self = type::bind( this );
+        MYSQL_RES *res = mysql_store_result( obj->fd );
+        _mariadb_::cb task; process::await( task, obj->fd, res, cb, self ); return arr;
     }
 
 };}
