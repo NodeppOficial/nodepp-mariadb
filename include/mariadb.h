@@ -25,8 +25,6 @@ public:
     template< class T, class U, class V, class Q > gnEmit( T& fd, U& res, V& cb, Q& self ){
     gnStart 
 
-        if( res == NULL ) { process::error( mysql_error(fd) ); }
-
         num_fields = mysql_num_fields( res ); 
         row        = mysql_fetch_row( res );
 
@@ -125,6 +123,8 @@ public:
 
         auto self = type::bind( this );
         MYSQL_RES *res = mysql_store_result( obj->fd );
+
+        if( res == NULL ) { process::error( mysql_error(fd) ); }
         _mariadb_::cb task; process::add( task, obj->fd, res, cb, self );
     }
 
@@ -137,6 +137,8 @@ public:
 
         auto self = type::bind( this );
         MYSQL_RES *res = mysql_store_result( obj->fd );
+
+        if( res == NULL ) { process::error( mysql_error(fd) ); }
         _mariadb_::cb task; process::await( task, obj->fd, res, cb, self ); return arr;
     }
 
