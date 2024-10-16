@@ -2,14 +2,15 @@
 Run **MariaDB** in Nodepp
 
 ## Dependencies
+```bash
+#libmariadbclient-dev
+  🪟: pacman -S mingw-w64-x86_64-libmariadbclient
+  🐧: sudo apt install libmariadb-dev
 
-- libmariadbclient-dev
-  - 🪟: `pacman -S mingw-w64-x86_64-libmariadbclient`
-  - 🐧: `sudo apt install libmariadb-dev`
-
-- Openssl
-  - 🪟: `pacman -S mingw-w64-ucrt-x86_64-openssl`
-  - 🐧: `sudo apt install libssl-dev`
+#Openssl
+  🪟: pacman -S mingw-w64-ucrt-x86_64-openssl
+  🐧: sudo apt install libssl-dev
+```
 
 ## Example
 ```cpp
@@ -61,4 +62,6 @@ void onMain() {
 ```
 
 ## Compilation
-`g++ -o main main.cpp -I ./include -lmariadb -lssl -lcrypto ; ./main`
+```bash
+g++ -o main main.cpp -I ./include -lmariadb -lssl -lcrypto ; ./main
+```
