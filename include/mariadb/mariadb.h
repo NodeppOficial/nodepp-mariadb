@@ -114,9 +114,13 @@ public:
 
     }
     
+    mariadb_t () : obj( new NODE ) { obj->state = 0; }
+    
     /*─······································································─*/
 
     void exec( const string_t& cmd, const function_t<void,sql_item_t>& cb ) const {
+        if( obj->state == 0 ){ return; }
+
         if( mysql_real_query( obj->fd, cmd.data(), cmd.size() ) != 0 ){
             process::error( mysql_error( obj->fd ) );
         }
@@ -130,6 +134,8 @@ public:
 
     array_t<sql_item_t> exec( const string_t& cmd ) const { array_t<sql_item_t> arr;
         function_t<void,sql_item_t> cb = [&]( sql_item_t args ){ arr.push( args ); };
+
+        if( obj->state == 0 ){ return nullptr; }
 
         if( mysql_real_query( obj->fd, cmd.data(), cmd.size() ) != 0 ){
             process::error( mysql_error( obj->fd ) );

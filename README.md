@@ -15,7 +15,7 @@ Run **MariaDB** in Nodepp
 ## Example
 ```cpp
 #include <nodepp/nodepp.h>
-#include <mariadb.h>
+#include <mariadb/mariadb.h>
 
 using namespace nodepp;
 

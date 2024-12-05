@@ -1,5 +1,5 @@
 #include <nodepp/nodepp.h>
-#include <mariadb.h>
+#include <mariadb/mariadb.h>
 
 using namespace nodepp;
 
